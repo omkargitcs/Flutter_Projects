@@ -1,12 +1,43 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 void main() {
   runApp(
-    const MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: PersonalDetail(),
+    ChangeNotifierProvider(
+      create: (context) => RegistrationProvider(),
+      child: const MaterialApp(
+        debugShowCheckedModeBanner: false,
+        home: PersonalDetail(),
+      ),
     ),
   );
+}
+
+class RegistrationProvider extends ChangeNotifier {
+  String fullName = "";
+  String email = "";
+  String degree = "";
+  String university = "";
+  String company = "";
+  String years = "";
+
+  void UpdatePersonal(String name, String mail) {
+    fullName = name;
+    email = mail;
+    notifyListeners();
+  }
+
+  void UpdateEducation(String deg, String uni) {
+    degree = deg;
+    university = uni;
+    notifyListeners();
+  }
+
+  void updateExperience(String comp, String yr) {
+    company = comp;
+    years = yr;
+    notifyListeners();
+  }
 }
 
 class PersonalDetail extends StatelessWidget {
@@ -14,25 +45,29 @@ class PersonalDetail extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final provider = Provider.of<RegistrationProvider>(context, listen: false);
     return Scaffold(
-      backgroundColor: Colors.black87,
+      backgroundColor: Colors.lightGreen,
       appBar: AppBar(title: const Text("Page 1:Personal Details")),
       body: Padding(
         padding: const EdgeInsets.all(20.0),
         child: Column(
           children: [
-            const TextField(
+            TextField(
+              onChanged: (val) => provider.fullName = val,
               decoration: InputDecoration(labelText: "Full Name"),
             ),
-            const TextField(decoration: InputDecoration(labelText: "Email")),
+            TextField(
+              onChanged: (val) => provider.email = val,
+              decoration: InputDecoration(labelText: "Email"),
+            ),
             const SizedBox(height: 20),
+            const Spacer(),
             ElevatedButton(
-              onPressed: () =>
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => const EducationPage()),
-                  ),
+              onPressed: () => Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const EducationPage()),
+              ),
               child: const Text("Next"),
             ),
           ],
@@ -47,6 +82,7 @@ class EducationPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final provider = Provider.of<RegistrationProvider>(context, listen: false);
     return Scaffold(
       appBar: AppBar(title: const Text("PAGE 2 :EDUCATION")),
       body: Padding(
@@ -54,20 +90,21 @@ class EducationPage extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const TextField(
-              decoration: InputDecoration(labelText: "Highest Degree"),
+            TextField(
+              onChanged: (val) => provider.degree = val,
+              decoration: const InputDecoration(labelText: "Highest Degree"),
             ),
-            const TextField(
-              decoration: InputDecoration(labelText: "University"),
+            TextField(
+              onChanged: (val) => provider.university = val,
+              decoration: const InputDecoration(labelText: "University"),
             ),
             const SizedBox(height: 20),
+            const Spacer(),
             ElevatedButton(
-              onPressed: () =>
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => const ExperiencePage()),
-                  ),
+              onPressed: () => Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const ExperiencePage()),
+              ),
               child: const Text("Next page 3 Experience"),
             ),
           ],
@@ -82,27 +119,29 @@ class ExperiencePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final provider = Provider.of<RegistrationProvider>(context, listen: false);
     return Scaffold(
-      backgroundColor: Colors.black87,
+      backgroundColor: Colors.orangeAccent,
       appBar: AppBar(title: const Text("Page 3 Experince Page")),
       body: Padding(
         padding: EdgeInsets.all(20.0),
         child: Column(
           children: [
-            const TextField(
-              decoration: InputDecoration(labelText: "Company Name"),
+            TextField(
+              onChanged: (val) => provider.company = val,
+              decoration: const InputDecoration(labelText: "Company Name"),
             ),
-            const TextField(
+            TextField(
+              onChanged: (val) => provider.years = val,
               decoration: InputDecoration(labelText: "Years of Experience"),
             ),
             const SizedBox(height: 20),
+            const Spacer(),
             ElevatedButton(
-              onPressed: () =>
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => const SuccessPage()),
-                  ),
+              onPressed: () => Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const SuccessPage()),
+              ),
               child: const Text("PAGE 4 SUBMIT"),
             ),
           ],
@@ -117,31 +156,89 @@ class SuccessPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final data = Provider.of<RegistrationProvider>(context);
     return Scaffold(
-        appBar: AppBar(
-            title: const Text("page 4 SUBMISSION")
-        ),
-        body: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              const Icon(Icons.check_circle, color: Colors.green, size: 100),
-              const SizedBox(height: 20),
-              const Text("SUBMITTTED SUCCESSFULLY", style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 24,
-                  fontFamily: "times new roman"),
+      appBar: AppBar(title: const Text("page 4 SUBMISSION")),
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const Icon(Icons.check_circle, color: Colors.green, size: 100),
+            const SizedBox(height: 20),
+            const Text(
+              "SUBMITTTED SUCCESSFULLY",
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 24,
+                fontFamily: "times new roman",
+              ),
+            ),
+            _infoCard("Personal", {
+              "Name :": data.fullName,
+              "Email :": data.email,
+            }),
+            _infoCard("EDUCATION ", {
+              "DEGREE  :": data.degree,
+              "university :": data.university,
+            }),
+            _infoCard("EXPERIENCE ", {
+              "COMPANY  :": data.company,
+              "years  :": data.years,
+            }),
 
-              ),
-              const SizedBox(height: 30),
-              ElevatedButton(onPressed: () =>
+            const SizedBox(height: 30),
+
+            ElevatedButton(
+              onPressed: () =>
                   Navigator.popUntil(context, (route) => route.isFirst),
-                  child: const Text("Start NEW REGISTRATION"),
-              ),
-            ],
-          ),
+              child: const Text("Start NEW REGISTRATION"),
+            ),
+          ],
         ),
+      ),
     );
   }
+}
+
+Widget _infoCard(String title, Map<String, String> details) {
+  return Card(
+    elevation: 4,
+    margin: const EdgeInsets.symmetric(vertical: 10),
+    child: Padding(
+      padding: const EdgeInsets.all(15),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            title,
+            style: const TextStyle(
+              fontFamily: "times new roman",
+              fontSize: 24,
+              fontWeight: FontWeight.bold,
+              color: Colors.green,
+            ),
+          ),
+          const Divider(),
+          ...details.entries.map(
+            (e) => Padding(
+              padding: const EdgeInsets.symmetric(vertical: 4),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(e.key, style: const TextStyle(color: Colors.grey)),
+                  Text(
+                    e.value,
+                    style: const TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
+    ),
+  );
+}
+
 
 }

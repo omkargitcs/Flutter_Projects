@@ -173,19 +173,30 @@ class SuccessPage extends StatelessWidget {
                 fontFamily: "times new roman",
               ),
             ),
-            _infoCard("Personal", {
-              "Name :": data.fullName,
-              "Email :": data.email,
-            }),
-            _infoCard("EDUCATION ", {
-              "DEGREE  :": data.degree,
-              "university :": data.university,
-            }),
-            _infoCard("EXPERIENCE ", {
-              "COMPANY  :": data.company,
-              "years  :": data.years,
-            }),
-
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [const Text("Name :"), Text(data.fullName)],
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [const Text("Email :"), Text(data.email)],
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [const Text("Degree :"), Text(data.degree)],
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [const Text("university :"), Text(data.university)],
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [const Text("company :"), Text(data.company)],
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [const Text("years :"), Text(data.years)],
+            ),
             const SizedBox(height: 30),
 
             ElevatedButton(
@@ -200,45 +211,6 @@ class SuccessPage extends StatelessWidget {
   }
 }
 
-Widget _infoCard(String title, Map<String, String> details) {
-  return Card(
-    elevation: 4,
-    margin: const EdgeInsets.symmetric(vertical: 10),
-    child: Padding(
-      padding: const EdgeInsets.all(15),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            title,
-            style: const TextStyle(
-              fontFamily: "times new roman",
-              fontSize: 24,
-              fontWeight: FontWeight.bold,
-              color: Colors.green,
-            ),
-          ),
-          const Divider(),
-          ...details.entries.map(
-            (e) => Padding(
-              padding: const EdgeInsets.symmetric(vertical: 4),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(e.key, style: const TextStyle(color: Colors.grey)),
-                  Text(
-                    e.value,
-                    style: const TextStyle(fontWeight: FontWeight.bold),
-                  ),
-                ],
-              ),
-            ),
-          ),
-        ],
-      ),
-    ),
-  );
-}
 
 
 }

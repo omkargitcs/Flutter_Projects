@@ -1,7 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:firebase_core/firebase_core.dart'; // <--- Add this
+import 'firebase_options.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
-void main() {
+
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
   runApp(
     ChangeNotifierProvider(
       create: (context) => RegistrationProvider(),
@@ -14,6 +23,24 @@ void main() {
 }
 
 class RegistrationProvider extends ChangeNotifier {
+  Future<void> saveToFirestore() async {
+    try {
+      // 'registrations' is the folder name in Firebase
+      await FirebaseFirestore.instance.collection('registrations').add({
+        'fullName': fullName,
+        'email': email,
+        'degree': degree,
+        'university': university,
+        'company': company,
+        'years': years,
+        'timestamp': FieldValue.serverTimestamp(),
+      });
+      print("Data sent to Firebase!");
+    } catch (e) {
+      print("Error saving to Firebase: $e");
+      rethrow; // Pass error back to UI if needed
+    }
+  }
   String fullName = "";
   String email = "";
   String degree = "";
@@ -138,10 +165,18 @@ class ExperiencePage extends StatelessWidget {
             const SizedBox(height: 20),
             const Spacer(),
             ElevatedButton(
-              onPressed: () => Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => const SuccessPage()),
-              ),
+              onPressed: () async {
+                // 1. Send the data to Firebase
+                await provider.saveToFirestore();
+
+                // 2. Then navigate to SuccessPage
+                if (context.mounted) {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => const SuccessPage()),
+                  );
+                }
+              },
               child: const Text("PAGE 4 SUBMIT"),
             ),
           ],
@@ -210,6 +245,8 @@ class SuccessPage extends StatelessWidget {
     );
   }
 }
+
+
 
 
 

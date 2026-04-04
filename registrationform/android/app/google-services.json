@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "950606991263",
+    "project_id": "registrationform-99493",
+    "storage_bucket": "registrationform-99493.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:950606991263:android:1abcd0c5b1c57512f437aa",
+        "android_client_info": {
+          "package_name": "com.example.registrationform"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD0UOR0Lv8KX6ej-GR3ui8a1Gtz6cbLoW4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
